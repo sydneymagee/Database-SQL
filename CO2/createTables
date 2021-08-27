@@ -1,0 +1,83 @@
+CREATE TABLE employee2 (
+    fname varchar(20)NOT NULL,
+    minit char,
+    lname varchar(20) NOT NULL,
+    ssn varchar(11) NOT NULL,
+    bdate DATE NOT NULL,
+    address varchar(50) NOT NULL,
+    sex char(1),
+    salary double(7,2) NOT NULL,
+    superssn varchar(11) ,
+    dno varchar(2) NOT NULL,
+    CONSTRAINT EMPPK 
+        PRIMARY KEY (ssn),
+    CONSTRAINT EMPSUPERFK
+        FOREIGN KEY (superssn) REFERENCES employee2(ssn)
+        ON DELETE SET NULL  ON UPDATE CASCADE,
+    CONSTRAINT EMPDEPTFK
+        FOREIGN KEY (dno) REFERENCES department2(dnumber)
+        ON DELETE SET DEFAULT   ON UPDATE CASCADE
+    );
+
+CREATE TABLE department2 (
+    dname varchar(20),
+    dnumber varchar(2) NOT NULL,
+    mgrssn varchar(11),
+    mgrstartdate date,
+    CONSTRAINT DEPTPK 
+        PRIMARY KEY (dnumber),
+    CONSTRAINT DEPTSK 
+        UNIQUE (dname),
+    CONSTRAINT DEPTMGRFK 
+        FOREIGN KEY (mgrssn) REFERENCES employee2(ssn)
+        ON DELETE CASCADE  ON UPDATE CASCADE
+    );
+
+CREATE TABLE dept_locations2 (
+    dnumber varchar(2) NOT NULL,
+    dlocation varchar(20) NOT NULL,
+    CONSTRAINT PRIMARY KEY (dnumber, dlocation),
+    CONSTRAINT FOREIGN KEY (dnumber) REFERENCES department2(dnumber)
+        ON DELETE CASCADE   ON UPDATE CASCADE
+    );
+
+CREATE TABLE project2 (
+    pname varchar(20) NOT NULL,
+    pnumber int(2) NOT NULL,
+    plocation varchar(20),
+    dnum varchar(2),
+    CONSTRAINT PROPK 
+        PRIMARY KEY (pnumber),
+    CONSTRAINT PROSK 
+        UNIQUE (pname),
+    CONSTRAINT PROFK
+        FOREIGN KEY (dnum) REFERENCES department2(dnumber)
+        ON DELETE CASCADE ON UPDATE CASCADE
+    );
+
+CREATE TABLE works_on2 (
+    essn varchar(9) NOT NULL,
+    pno int(2) NOT NULL,
+    hours double(5,2),
+    CONSTRAINT WOPK
+        PRIMARY KEY (essn, pno),
+    CONSTRAINT WOESSNFK
+        FOREIGN KEY (essn) REFERENCES employee2(ssn),
+    CONSTRAINT WOPNOFK
+        FOREIGN KEY (pno) REFERENCES project2(pnumber)
+        ON DELETE CASCADE ON UPDATE CASCADE     
+    );
+
+CREATE TABLE dependent2 (
+    essn varchar(9) NOT NULL,
+    dependent_name varchar(20) NOT NULL,
+    sex char,
+    bdate date,
+    relationship varchar(10),
+    CONSTRAINT DEPPK 
+        PRIMARY KEY (essn, dependent_name),
+    CONSTRAINT DEPFK 
+        FOREIGN KEY (essn) REFERENCES employee2(ssn)
+        ON DELETE SET NULL  ON UPDATE CASCADE
+    );
+ 

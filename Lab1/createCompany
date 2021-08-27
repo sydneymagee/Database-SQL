@@ -1,0 +1,67 @@
+CREATE TABLE employee (
+    fname varchar(20)NOT NULL,
+    minit char,
+    lname varchar(20) NOT NULL,
+    ssn varchar(11) NOT NULL,
+    bdate DATE NOT NULL,
+    address varchar(50) NOT NULL,
+    sex char(1),
+    salary double(7,2) NOT NULL,
+    superssn varchar(11) ,
+    dno varchar(2) NOT NULL,
+    CONSTRAINT PRIMARY KEY (ssn),
+    CONSTRAINT FOREIGN KEY (superssn) REFERENCES employee(ssn)
+    );
+
+CREATE TABLE department (
+    dname varchar(20),
+    dnumber varchar(2) NOT NULL,
+    mgrssn varchar(11),
+    mgrstartdate date,
+    CONSTRAINT department_dnumber_pk PRIMARY KEY (dnumber),
+    CONSTRAINT UNIQUE (dname),
+    CONSTRAINT FOREIGN KEY (mgrssn) REFERENCES employee(ssn)
+    );
+
+CREATE TABLE dept_locations (
+    dnumber varchar(2) NOT NULL,
+    dlocation varchar(20) NOT NULL,
+    CONSTRAINT PRIMARY KEY (dnumber, dlocation),
+    CONSTRAINT FOREIGN KEY (dnumber) REFERENCES department(dnumber)
+    );
+
+CREATE TABLE project (
+    pname varchar(20) NOT NULL,
+    pnumber int(2),
+    plocation varchar(20),
+    dnum varchar(2),
+    CONSTRAINT PRIMARY KEY (pnumber),
+    CONSTRAINT UNIQUE (pname),
+    CONSTRAINT FOREIGN KEY (dnum) REFERENCES department(dnumber)
+    );
+
+CREATE TABLE works_on (
+    essn varchar(9) NOT NULL,
+    pno int(2) NOT NULL,
+    hours double(5,2),
+    CONSTRAINT PRIMARY KEY (essn, pno),
+    CONSTRAINT FOREIGN KEY (essn) REFERENCES employee(ssn),
+    CONSTRAINT FOREIGN KEY (pno) REFERENCES project(pnumber)
+    );
+
+CREATE TABLE dependent (
+    essn varchar(9) NOT NULL,
+    dependent_name varchar(20) NOT NULL,
+    sex char,
+    bdate date,
+    relationship varchar(10),
+    CONSTRAINT PRIMARY KEY (essn, dependent_name),
+    CONSTRAINT FOREIGN KEY (essn) REFERENCES employee(ssn)
+    );
+ 
+ALTER TABLE employee ADD (
+    CONSTRAINT FOREIGN KEY (dno) REFERENCES department(dnumber)
+    );
+
+
+

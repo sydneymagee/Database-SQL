@@ -1,0 +1,85 @@
+CREATE TABLE airport(
+    airport_code varchar(20),
+    name varchar(20),
+    city varchar(20),
+    state varchar(10),
+    CONSTRAINT PRIMARY KEY (airport_code)
+    );
+
+CREATE TABLE flight(
+    flight_num varchar(10),
+    airline varchar(20),
+    weekdays varchar(15),
+    CONSTRAINT PRIMARY KEY (flight_num)
+    );
+
+CREATE TABLE flight_leg(
+    flight_num varchar(10),
+    leg_num varchar(10),
+    depart_air_code varchar(20),    
+    schedule_depart varchar(10),
+    arr_air_code varchar(20),
+    schedule_arr varchar(10),
+    CONSTRAINT PRIMARY KEY (flight_num, leg_num),
+    CONSTRAINT FOREIGN KEY (flight_num) REFERENCES flight(flight_num),
+    CONSTRAINT FOREIGN KEY (depart_air_code) REFERENCES airport(airport_code),
+    CONSTRAINT FOREIGN KEY (arr_air_code) REFERENCES airport(airport_code)
+    );
+
+CREATE TABLE leg_instance(
+    flight_num varchar(10),
+    leg_num varchar(10),
+    date DATE,
+    num_of_avail_seats varchar(5),
+    airplane_id varchar(5),
+    depart_air_code varchar(20),
+    depart_time varchar(10),
+    arr_air_code varchar(20),
+    arr_time varchar(10),
+    CONSTRAINT PRIMARY KEY (flight_num, leg_num, date),
+    CONSTRAINT FOREIGN KEY (flight_num, leg_num) REFERENCES flight_leg(flight_num, leg_num)
+    );
+
+CREATE TABLE fare(
+    flight_num varchar(10),
+    fare_code varchar(10),
+    amount varchar(10),
+    restrictions varchar(20),
+    CONSTRAINT PRIMARY KEY (flight_num, fare_code),
+    CONSTRAINT FOREIGN KEY (flight_num) REFERENCES flight(flight_num)
+    );
+
+CREATE TABLE airplane_type(
+    airplane_type_name varchar(20),
+    max_seats varchar(10),
+    company varchar(20),
+    CONSTRAINT PRIMARY KEY (airplane_type_name)
+    );
+
+CREATE TABLE can_land(
+    airplane_type_name varchar(20),
+    airport_code varchar(10),
+    CONSTRAINT PRIMARY KEY (airplane_type_name, airport_code),
+    CONSTRAINT FOREIGN KEY (airplane_type_name) REFERENCES airplane_type(airplane_type_name),
+    CONSTRAINT FOREIGN KEY (airport_code) REFERENCES airport(airport_code)
+    );
+
+CREATE TABLE airplane(
+    airplane_id varchar(10),
+    total_num_of_seats varchar(10),
+    airplane_type varchar(20),
+    CONSTRAINT PRIMARY KEY (airplane_id),
+    CONSTRAINT FOREIGN KEY (airplane_type) REFERENCES airplane_type(airplane_type_name)
+    );
+
+CREATE TABLE seat_reservation(
+    flight_num varchar(10),
+    leg_num varchar(10),
+    date DATE,
+    seat_num varchar(10),
+    customer_name varchar(20),
+    customer_phone varchar(15),
+    CONSTRAINT PRIMARY KEY (flight_num, leg_num, date, seat_num),
+    CONSTRAINT FOREIGN KEY (flight_num, leg_num, date) REFERENCES leg_instance(flight_num, leg_num, date)
+    );
+   

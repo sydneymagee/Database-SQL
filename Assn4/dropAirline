@@ -1,0 +1,12 @@
+SET FOREIGN_KEY_CHECKS=0;
+drop table airport;
+drop table flight;
+drop table flight_leg;
+drop table leg_instance;
+drop table fare;
+drop table airplane_type;
+drop table can_land;
+drop table airplane;
+drop table seat_reservation;
+SET FOREIGN_KEY_CHECKS=1;
+
